@@ -19,7 +19,8 @@ namespace Snake
         static void Main(string[] args)
         {
             Sounds sound = new Sounds();
-            Thread backgroundMusicThread = new Thread(sound.PlayBackgroundMusic);
+
+           
 
             Difficulty easyDifficulty = new Difficulty{FieldColor = ConsoleColor.Green, FieldSize = 80, DeadlyFood=false };
 
@@ -29,23 +30,27 @@ namespace Snake
 
             Difficulty gameDifficulty = null;
 
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(" __      ___ _     _              _____             _        \r\n \\ \\    / (_) |   | |            / ____|           | |       \r\n  \\ \\  / / _| |__ | |_   _ _   _| (___  _ __   __ _| | _____ \r\n   \\ \\/ / | | '_ \\| | | | | | | |\\___ \\| '_ \\ / _` | |/ / _ \\\r\n    \\  /  | | |_) | | |_| | |_| |____) | | | | (_| |   <  __/\r\n     \\/   |_|_.__/|_|\\__, |\\__, |_____/|_| |_|\\__,_|_|\\_\\___|\r\n                      __/ | __/ |                            \r\n                     |___/ |___/                             ");
+            Console.ReadKey(true);
+
+
             Console.WriteLine("Choose difficulty: ");
             Console.WriteLine("Easy - 1");
             Console.WriteLine("Medium - 2");
             Console.WriteLine("Hard - 3");
             
-
-
+            
 
 
             int difficultyChoice = Convert.ToInt32(Console.ReadLine());
-            if (difficultyChoice<1 || difficultyChoice > 3)
+            while (difficultyChoice<1 || difficultyChoice > 3)
             {
-                Console.WriteLine("Invalid difficulty. default difficulty - Medium\nPress enter to start");
-                gameDifficulty = mediumDifficulty;
-                Console.ReadKey();
+                Console.WriteLine("Invalid difficulty. Please, input difficulty again.");
+                difficultyChoice = Convert.ToInt32(Console.ReadLine());
             }
-            else if (difficultyChoice==1)
+            if (difficultyChoice==1)
             {
                 gameDifficulty = easyDifficulty;
             }
@@ -56,10 +61,11 @@ namespace Snake
             else
             {
                 gameDifficulty= hardDifficulty;
+                
             }
+
+
             
-
-
 
             Console.Clear();
             Console.ForegroundColor = gameDifficulty.FieldColor;
@@ -67,10 +73,16 @@ namespace Snake
             Walls walls = new Walls(gameDifficulty.FieldSize, 24);
             walls.Draw();
 
+
+            
+
             Point p = new Point(4, 5, '*');
             Score score = new Score();
             Snake snake = new Snake(p, 4, Direction.RIGHT, score);
             snake.Draw();
+
+            FoodCreator poisonfoodCreator = new FoodCreator(gameDifficulty.FieldSize - 1, 24, '-');
+            Point poisonfood = poisonfoodCreator.CreateFood();
 
             FoodCreator foodCreator = new FoodCreator(gameDifficulty.FieldSize - 1, 24, '$');
             Point food = foodCreator.CreateFood();
@@ -80,9 +92,13 @@ namespace Snake
             Point badfood = badfoodCreator.CreateFood();
             badfood.Draw();
 
-            FoodCreator poisonfoodCreator = new FoodCreator(gameDifficulty.FieldSize - 1, 24, '-');
-            Point poisonfood = poisonfoodCreator.CreateFood();
-            poisonfood.Draw();
+            if (gameDifficulty.DeadlyFood == true)
+            {
+                poisonfood.Draw();
+
+            }
+           
+
 
 
 
@@ -90,7 +106,7 @@ namespace Snake
 
             while (true)
             {
-                if (walls.IsHit(snake) || snake.IsHitTail())
+                if (walls.IsHit(snake) || snake.IsHitTail() || snake.Eat(poisonfood))
                 {
                     break;
                 }
@@ -103,12 +119,6 @@ namespace Snake
                 {
                     badfood = badfoodCreator.CreateFood();
                     badfood.Draw();
-                }
-                if (snake.Eat(poisonfood))
-                {
-
-                    score.MinusScore();
-                    break;
                 }
                 else
                 {
@@ -129,6 +139,9 @@ namespace Snake
 
         static void WriteGameOver(Score score)
         {
+            Sounds sound = new Sounds();
+            sound.PlayDeathSound();
+
             int xOffset = 25;
             int yOffset = 8;
 
@@ -143,6 +156,11 @@ namespace Snake
             WriteText("============================", xOffset, yOffset++);
             WriteText("Enter your name:", xOffset + 2, yOffset++);
             string name = InputText(xOffset + 3, yOffset++);
+            while (string.IsNullOrEmpty(name))
+            {
+                WriteText("You must enter something:", xOffset + 2, yOffset++);
+                name = InputText(xOffset + 3, yOffset++);
+            }
             int finalScore = score.GetScore();
 
             using (StreamWriter writer = File.AppendText("Users.txt"))
@@ -157,10 +175,11 @@ namespace Snake
             Console.Clear();
             User user = new User("some", 10);
             Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("Users:\n");
+            Console.WriteLine("Users scores:\n");
             user.UsersOutput();
 
         }
+
 
 
 

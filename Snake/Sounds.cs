@@ -7,27 +7,24 @@ using System.Text;
 using System.Threading;
 using NAudio.Wave;
 using System.Media;
-using NAudio.Wave;
 
 
-namespace Snake
+public class Sounds
 {
-    public class Sounds
+    
+
+    public void PlayDeathSound()
     {
-        public void PlayBackgroundMusic()
+        string deathSoundPath = "C:\\Users\\Administrator\\source\\repos\\Snake\\Snake\\roblox-death-sound-effect.mp3";
+
+        using (var audioFile = new AudioFileReader(deathSoundPath))
+        using (var outputDevice = new WaveOutEvent())
         {
-
-            string musicPath = "roblox-death-sound-effect.wav";
-
-
-            using (var audioFile = new AudioFileReader(musicPath))
-            using (var outputDevice = new WaveOutEvent())
+            outputDevice.Init(audioFile);
+            outputDevice.Play();
+            while (outputDevice.PlaybackState == PlaybackState.Playing)
             {
-                outputDevice.Init(audioFile);
-                outputDevice.Play();
-
-
-                Thread.Sleep(Timeout.Infinite);
+                Thread.Sleep(100);  // Wait until the sound has finished playing
             }
         }
     }

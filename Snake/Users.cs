@@ -18,7 +18,7 @@ namespace Snake
 
         public void UsersOutput()
         {
-            string[] lines = File.ReadAllLines("Users.txt");
+            string[] lines = File.ReadAllLines("Users.txt");  //C:\Users\Administrator\source\repos\Snake\Snake\bin\Debug\net8.0\
 
 
             List<User> users = new List<User>();
