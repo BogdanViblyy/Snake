@@ -11,7 +11,7 @@ using System.Media;
 
 public class Sounds
 {
-    
+
 
     public void PlayDeathSound()
     {

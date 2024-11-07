@@ -21,7 +21,7 @@ namespace Snake
         {
             Sounds sound = new Sounds();
 
-           
+
 
             Difficulty easyDifficulty = new Difficulty{FieldColor = ConsoleColor.Green, FieldSize = 80, DeadlyFood=false };
 
@@ -41,29 +41,45 @@ namespace Snake
             Console.WriteLine("Easy - 1");
             Console.WriteLine("Medium - 2");
             Console.WriteLine("Hard - 3");
-            
-            
 
 
-            int difficultyChoice = Convert.ToInt32(Console.ReadLine());
-            while (difficultyChoice<1 || difficultyChoice > 3)
+
+            while (true)
             {
-                Console.WriteLine("Invalid difficulty. Please, input difficulty again.");
-                difficultyChoice = Convert.ToInt32(Console.ReadLine());
+                try
+                {
+                    int difficultyChoice = Convert.ToInt32(Console.ReadLine());
+                    while (difficultyChoice < 1 || difficultyChoice > 3)
+                    {
+                        Console.WriteLine("Invalid difficulty. Please, input difficulty again.");
+                        difficultyChoice = Convert.ToInt32(Console.ReadLine());
+                    }
+                    if (difficultyChoice == 1)
+                    {
+                        gameDifficulty = easyDifficulty;
+                        break;
+                    }
+                    else if (difficultyChoice == 2)
+                    {
+                        gameDifficulty = mediumDifficulty;
+                        break;
+                    }
+                    else
+                    {
+                        gameDifficulty = hardDifficulty;
+                        break;
+
+                    }
+
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Input number.");
+
+
+                }
             }
-            if (difficultyChoice==1)
-            {
-                gameDifficulty = easyDifficulty;
-            }
-            else if (difficultyChoice==2) 
-            {
-                gameDifficulty = mediumDifficulty;
-            }
-            else
-            {
-                gameDifficulty= hardDifficulty;
-                
-            }
+           
 
 
             
