@@ -8,6 +8,7 @@ using System.Threading;
 using NAudio.Wave;
 using System.Media;
 using static System.Formats.Asn1.AsnWriter;
+using System.Collections;
 
 
 
@@ -113,11 +114,15 @@ namespace Snake
                 if (snake.Eat(food))
                 {
                     food = foodCreator.CreateFood();
+                    score.PlusScore();
+                    snake.Grow();
                     food.Draw();
                 }
-                if (snake.BadEat(badfood))
+                if (snake.Eat(badfood))
                 {
                     badfood = badfoodCreator.CreateFood();
+                    score.MinusScore();
+                    snake.Shrink();
                     badfood.Draw();
                 }
                 else

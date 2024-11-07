@@ -15,7 +15,7 @@ namespace Snake
             score = 0;
         }
 
-        public void plusScore()
+        public void PlusScore()
         {
             score++;
         }

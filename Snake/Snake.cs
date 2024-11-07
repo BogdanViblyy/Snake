@@ -41,6 +41,24 @@ namespace Snake
             nextPoint.Move(1, direction);
             return nextPoint;
         }
+        public void Shrink()
+        {
+            if (pList.Count > 3)
+            {
+                Point tail = pList[0];
+                pList.RemoveAt(0); 
+                tail.Clear(); 
+            }
+        }
+        public void Grow()
+        {
+            
+            Point head = pList[pList.Count - 1];
+            Point newHead = new Point(head);
+            newHead.Move(1, direction);  
+            pList.Add(newHead);     
+        }
+
 
         public bool IsHitTail()
         {
@@ -68,29 +86,14 @@ namespace Snake
         public bool Eat(Point food)
         {
             Point head = GetNextPoint();
-            if (head.IsHit(food))
+            if (head.IsHit(food))  
             {
+                food.sym = head.sym; 
+                return true;
+            }
+            return false;
+        }
 
-                food.sym = head.sym;
-                pList.Add(food);
-                score.plusScore();
-                return true;
-            }
-            else
-                return false;
-        }
-        public bool BadEat(Point food)
-        {
-            Point head = GetNextPoint();
-            if (head.IsHit(food))
-            {
-                food.sym = head.sym;
-                pList.Remove(food);
-                score.MinusScore();
-                return true;
-            }
-            else
-                return false;
-        }
+
     }
 }
